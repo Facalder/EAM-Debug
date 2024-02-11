@@ -31,4 +31,9 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shared\Components\Modal\" />
+    <Folder Include="Shared\Dashboard\Menu\" />
+  </ItemGroup>
 </Project>

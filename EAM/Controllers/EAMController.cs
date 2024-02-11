@@ -119,7 +119,7 @@ namespace EAM.Controllers
         }
 
         [HttpGet("Asset-Single/{id}")]
-        public async Task<ActionResult<xpAsset>> Asset_Single(string id)
+        public async Task<ActionResult<xpAsset>> Asset_Single(string? id)
         {
             var asset = new xpAsset();
 
