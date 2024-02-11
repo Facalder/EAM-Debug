@@ -20,8 +20,8 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
-        run: dotnet restore DJATI_EAM.sln
+        run: dotnet restore EAM.sln
       - name: Build
-        run: dotnet build DJATI_EAM.sln --configuration Debug --no-restore
+        run: dotnet build EAM.sln --configuration Debug --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal

@@ -60,9 +60,9 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore DJATI_EAM.sln
+        run: dotnet restore EAM.sln
       - name: Build
-        run: dotnet build DJATI_EAM.sln --configuration Debug --no-restore
+        run: dotnet build EAM.sln --configuration Debug --no-restore
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
