@@ -1,5 +1,255 @@
-<h3>AssetListGeneric</h3>
+@page "/Asset/Asset-List-Generic"
+@using EAM.Shared.StoredProcedures
+@using EAM.Shared.Models
+@* @inject NavigationManager navigation; *@
+@inject HttpClient httpClient
+@inject IAssetRepository IService
+@inject IDialogService DialogService
+
+@* Turn this ON make OnInitializedAsync() calling twice *@
+@* @rendermode InteractiveWebAssembly *@
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
+
+<style>
+    /* table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    } */
+</style>
+
+<style>
+    table {
+        border-collapse: collapse;
+        display: inline-table;
+        font-family: Calibri;
+        font-size: medium;
+    }
+
+        table th, table td {
+            border: 1px solid;
+            border-color: grey;
+            padding: 4px 4px 4px 4px;
+            vertical-align: middle;
+        }
+
+    tr:hover {
+        background-color: cyan;
+    }
+
+    td:hover {
+        background-color: yellow;
+    }
+</style>
+
+<style>
+    .sticky-header {
+        position: sticky;
+        top: -1px;
+        z-index: 900;
+        background: lightyellow;
+        color: black;
+        font-size: large;
+    }
+
+    th:after,
+    th:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+    }
+
+    th:before {
+        top: 0;
+        border-top: 3px solid black;
+    }
+
+    th:after {
+        bottom: 0;
+        border-bottom: 3px solid black;
+    }
+</style>
+
+<PageTitle>Asset List</PageTitle>
+
+<br />
+
+@* @if (!assets!.Any())
+{
+    <FluentProgressRing Value="null"
+                        Width="64px"
+                        Stroke="ProgressStroke.Normal"
+                        Color="@(OfficeColor.Default.ToAttributeValue())" />
+} *@
+
+@if (categories!.Any())
+{
+    <FluentSelect Items="@categories"
+                  TOption="xpAsset_Category"
+                  Multiple=false
+                  Label="Select Asset Category..."
+                  Id="Category_Selection"
+                  OptionValue="@(p => p.Category)"
+                  OptionText="@(p => p.Category)"
+                  ValueChanged="@(e => OnCategoryChanged(e))" />
+}
+
+@if (!String.IsNullOrEmpty(_category))
+{
+    <FluentButton OnClick="@(async (e) => await NewA_sset())"
+                  Appearance="Appearance.Accent">Add New Asset</FluentButton>
+}
+<br />
+@if (assets!.Any())
+{
+    <table>
+        <thead>
+            <tr align="center" valign="middle" style="font-size: larger;">
+                <th colspan="30">
+                    Asset List <span style="color: red">@category</span>
+                </th>
+            </tr>
+            <tr style="text-align: center; vertical-align: middle;">
+                <th class="sticky-header">#</th>
+                <th class="sticky-header">Category</th>
+                <th class="sticky-header">Id</th>
+                <th class="sticky-header">Classification</th>
+                <th class="sticky-header">Name</th>
+                <th class="sticky-header">Brand</th>
+                <th class="sticky-header">Model</th>
+                <th class="sticky-header">Fuel</th>
+                <th class="sticky-header">Emission</th>
+                <th class="sticky-header">Prod<br />Year</th>
+                <th class="sticky-header">Serial Number</th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var (ar, idx) in assets!.Select((v, i) => (v, i)))
+                {
+                    <tr @key="ar">
+                        <td>
+                            @(idx + 1)
+                        </td>
+                        <td>@ar.Category</td>
+                        <td>
+                        <FluentButton OnClick="@(async (e) => {asset = ar; await OpenPanelAsync(ar);})"
+                                          Appearance="Appearance.Accent">@ar.Id</FluentButton>
+                        </td>
+                        <td>@ar.Classification</td>
+                    <td>@ar.Name</td>
+                        <td>@ar.Brand</td>
+                        <td>@ar.Model</td>
+                        <td>@ar.Fuel</td>
+                        <td>@ar.Emission</td>
+                        <td>@ar.Production_Year</td>
+                        <td>@ar.Serial_Number</td>
+                    </tr>
+                }
+
+        </tbody>
+    </table>
+}
 
 @code {
-    
+
+    private async Task NewA_sset()
+    {
+        asset = new();
+        asset.Company_Id = _company_Id;
+        asset.Category = _category;
+        await OpenPanelAsync(asset);
+
+        await Task.CompletedTask;
+    }
+
+}
+
+@code {
+    public string _company_Id = "002";
+
+    public List<xpAsset>? assets { get; set; } = new();
+    public xpAsset? asset { get; set; } = new();
+
+    public List<xpAsset_Category>? categories = new();
+    public xpAsset_Category? category;
+    public string? _category;
+
+    public List<xpAsset_Classification>? classifications = new();
+    public xpAsset_Classification? classification;
+    public string? _classification;
+
+    public List<xpAsset_Brand>? brands = new();
+    public xpAsset_Brand? brand;
+    public string? _brand;
+
+    public List<xpAsset_Group>? groups = new();
+    public xpAsset_Group? group;
+    public string? _group;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await IService.AssetCategoryAsync(_company_Id!);
+        groups = await IService.AssetGroupAsync(_company_Id!);
+    }
+
+    public async Task OnCategoryChanged(string value)
+    {
+        if (!String.IsNullOrEmpty(value))
+        {
+            _category = value;
+            assets = await httpClient.GetFromJsonAsync<List<xpAsset>>($"api/EAM/Asset-List/{_company_Id}/{_category}");
+            classifications = await httpClient.GetFromJsonAsync<List<xpAsset_Classification>>($"api/EAM/Asset-Classification/{_company_Id}/{_category}");
+            brands = await httpClient.GetFromJsonAsync<List<xpAsset_Brand>>($"api/EAM/Asset-Brand/{_company_Id}/{_category}");
+
+            // assets = await IService.AssetListAsync(_company_Id!, _category!);
+            // classifications = await IService.AssetClassificationAsync(_company_Id!, _category!);
+            // brands = await IService.AssetBrandAsync(_company_Id!, _category!);
+        }
+        else
+            assets = null;
+        await Task.CompletedTask;
+    }
+}
+
+@code {
+
+    private IDialogReference? _dialog;
+
+    private async Task OpenPanelAsync(xpAsset? _asset)
+    {
+        _dialog = await DialogService.ShowPanelAsync<AssetDetail>(_asset!, new DialogParameters<xpAsset>()
+            {
+                Content = _asset!,
+                Alignment = HorizontalAlignment.Center,
+                Modal = true,
+                ShowDismiss = true,
+                Title = $"{_asset!.Id} - {_asset!.Name}",
+                PrimaryAction = "Save",
+                SecondaryAction = "Cancel",
+                Width = "90em",
+                Height = "100em",
+                DialogType = DialogType.Panel,
+                PreventScroll = false,
+                DialogBodyStyle = "color: red;"
+            });
+        DialogResult result = await _dialog.Result;
+        await HandlePanel(result);
+    }
+
+    private async Task HandlePanel(DialogResult result)
+    {
+        if (result.Cancelled)
+        {
+            Console.WriteLine($"Panel Cancelled");
+        }
+        else
+        {
+            if (result.Data is not null)
+            {
+                xpAsset? _asset = result.Data as xpAsset;
+                Console.WriteLine($"Panel Closed by {_asset?.Id} {_asset?.Name}");
+            }
+        }
+
+        await Task.Run(() => Console.WriteLine($"Panel Finish"));
+    }
 }

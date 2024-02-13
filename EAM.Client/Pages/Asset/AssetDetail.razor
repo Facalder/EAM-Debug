@@ -1,5 +1,297 @@
-<h3>AssetDetail</h3>
+@page "/Asset/Asset-Details"
+@implements IDialogContentComponent<xpAsset>
+@using EAM.Shared.StoredProcedures
+
+@inject IAssetRepository IService
+@rendermode @(new InteractiveAutoRenderMode(prerender:false))
+
+<style>
+    fluent-tab {
+        border-radius: 1px;
+        border-top: 1px solid aqua;
+        color: dimgray;
+    }
+
+        fluent-tab:hover {
+            border-left: 5px solid cyan;
+            border-right: 1px solid cyan;
+            background-color: lightyellow;
+        }
+
+        fluent-tab:focus {
+            color: red;
+        }
+
+        .fluent-tab-label {
+            color: blue;
+        }
+
+    fluent-tab-panel {
+        background-color: lightyellow;
+        border-top: 2px solid aqua;
+        border-right: 2px solid aqua;
+        border-bottom: 2px solid aqua;
+        border-left: 6px solid aqua;
+        padding: 10px;
+        margin-left: 40px;
+        /* max-width: 450px; */
+    }
+
+    .fluent-select {
+        height: 30px;
+        line-height: 30px;
+        appearance: menulist-button;
+        border: solid 2px darkgray;
+        border-radius: 3px;
+        color: inherit;
+        /* background-color: red; */
+    }
+
+    .panel-header {
+        border-bottom: 6px solid red;
+        font-weight: bold;
+        font-size: large;
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+    }
+</style>
+
+@if (@Content != null && groups!.Count > 0)
+{
+    <FluentDialogBody>
+        <FluentTabs Orientation="Orientation.Vertical" ShowActiveIndicator="true" ActiveTabId="tab-v1" @ref="fluentTabs"
+                    ActiveTabIdChanged="(e => ActiveTabIdChanged(e))" OnTabChange="(e => OnTabChange(e))"
+                    OnTabSelect="(e => OnTabSelect(e))" OnTabClose="(e => OnTabClose(e))">
+            <FluentTab Label="@groups![0].Description"  Id="tab-v1">
+                <div class="panel-header">@groups![0].Description</div>
+                @* <FluentTextField Disabled @bind-Value=Content.Category Label="Category"></FluentTextField> *@
+                    <div>Category</div>
+                    <select id="Category_Id" @bind="@Content.Category" class="fluent-select" style="width: 100px;" disabled>
+                    @foreach (xpAsset_Category oh in categories!)
+                    {
+                        <option value="@oh.Category">@oh.Category</option>
+                    }
+                </select>
+                @* <FluentTextField @bind-Value=Content.Classification Label="Classification"></FluentTextField> *@
+                <div style="padding-top: 4px;">Classification</div>
+                <select id="Classification_Id" @bind="@Content.Classification" class="fluent-select" style="width: 200px;">
+                    @foreach (xpAsset_Classification oh in classifications!)
+                    {
+                        <option value="@oh.Classification">@oh.Classification</option>
+                    }
+                </select>
+                <FluentTextField @bind-Value=Content.Name Label="Name"></FluentTextField>
+                @* <FluentTextField @bind-Value=Content.Brand Label="Brand"></FluentTextField> *@
+                @* <label for="Brand_Id" >Brand</label> *@
+                <div style="padding-top: 4px;">Brand</div>
+                <select id="Brand_Id" @bind="@Content.Brand" class="fluent-select" style="width: 100px;">
+                    @foreach (xpAsset_Brand oh in brands!)
+                    {
+                        <option value="@oh.Brand">@oh.Brand</option>
+                    }
+                </select>
+                <FluentTextField @bind-Value=Content.Model Label="Model"></FluentTextField>
+                @* <FluentTextField @bind-Value=Content.Fuel Label="Fuel Type"></FluentTextField> *@
+                <div style="padding-top: 4px;">Fuel Type</div>
+                <select id="Brand_Id" @bind="@Content.Fuel" class="fluent-select" style="width: 100px;">
+                    <option value=""></option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Gasoline">Gasoline</option>
+                </select>
+                <FluentTextField @bind-Value=Content.Emission Label="Emission"></FluentTextField>
+                <FluentNumberField @bind-Value=Content.Production_Year Label="Production Year"></FluentNumberField>
+                <FluentTextField @bind-Value=Content.Serial_Number Label="Serial Number"></FluentTextField>
+                <FluentTextArea @bind-Value=Content.Specifications Label="Specifications" Placeholder="Specifications" Rows="5" Cols="60"></FluentTextArea>
+            </FluentTab>
+            <FluentTab Label="@groups![1].Description" Id="tab-v2">
+                <div class="panel-header">@groups![1].Description</div>
+                <FluentNumberField @bind-Value=Content.Price @bind-Value:format="##,###,###,###" Label="Price"></FluentNumberField>
+                <FluentDatePicker @bind-Value="@Content.Purchase_Date" Label="Purchase Date" />
+                <FluentTextField @bind-Value=value11 Label="Down Payment"></FluentTextField>
+                <FluentTextField @bind-Value=value12 Label="Supplier Name"></FluentTextField>
+                <FluentTextField @bind-Value=value13 Label="Warranty Details"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![2].Description" Id="tab-v3">
+                <div class="panel-header">@groups![2].Description</div>
+                <FluentTextField @bind-Value=value14 Label="Capacity & Size"></FluentTextField>
+                <FluentTextField @bind-Value=value15 Label="Performance Specifications"></FluentTextField>
+                <FluentTextField @bind-Value=value16 Label="Suitable Applications & Limitations"></FluentTextField>
+                <FluentTextField @bind-Value=value17 Label="Fuel Type & Consumption Rates"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![3].Description" Id="tab-v4">
+                <div class="panel-header">@groups![3].Description</div>
+                <FluentTextField @bind-Value=value18 Label="Current Book Value"></FluentTextField>
+                <FluentTextField @bind-Value=value19 Label="Depreciation Method & Rate"></FluentTextField>
+                <FluentTextField @bind-Value=value20 Label="Residual Value Estimation"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![4].Description" Id="tab-v5">
+                <div class="panel-header">@groups![4].Description</div>
+                <FluentTextField @bind-Value=value21 Label="Insurance Coverage Details"></FluentTextField>
+                <FluentTextField @bind-Value=value22 Label="Risk Assessment Documentation"></FluentTextField>
+                <FluentTextField @bind-Value=value23 Label="Claim History, If Any"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![5].Description" Id="tab-v6">
+                <div class="panel-header">@groups![5].Description</div>
+                <FluentTextField @bind-Value=value24 Label="Lease Terms"></FluentTextField>
+                <FluentTextField @bind-Value=value25 Label="Monthly Lease or Financing Costs"></FluentTextField>
+                <FluentTextField @bind-Value=value26 Label="Lease Expiration Date"></FluentTextField>
+                <FluentTextField @bind-Value=value27 Label="Monthly Heavy Equipment Tax"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![6].Description" Id="tab-v7">
+                <div class="panel-header">@groups![6].Description</div>
+                <FluentTextField @bind-Value=value28 Label="Details Of Any Upgrades or Modifications Made"></FluentTextField>
+                <FluentTextField @bind-Value=value29 Label="Impact Of Modifications on Performance & Value"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![7].Description" Id="tab-v8">
+                <div class="panel-header">@groups![7].Description</div>
+                <FluentTextField @bind-Value=value30 Label="Safety Certifications"></FluentTextField>
+                <FluentTextField @bind-Value=value31 Label="Compliance With Local & International Mining Regulations"></FluentTextField>
+                <FluentTextField @bind-Value=value32 Label="Inspection Records"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![8].Description" Id="tab-v9">
+                <div class="panel-header">@groups![8].Description</div>
+                <FluentTextField @bind-Value=value33 Label="Scheduled Maintenance Intervals"></FluentTextField>
+                <FluentTextField @bind-Value=value34 Label="Maintenance History (Including Date, Nature, & Cost Of Repairs)"></FluentTextField>
+                <FluentTextField @bind-Value=value35 Label="Parts Replaced or Serviced"></FluentTextField>
+                <FluentTextField @bind-Value=value36 Label="Next Scheduled Maintenance Date"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![9].Description" Id="tab-v10">
+                <div class="panel-header">@groups![9].Description</div>
+                <FluentTextField @bind-Value=value37 Label="Hours Of Operation"></FluentTextField>
+                <FluentTextField @bind-Value=value38 Label="Operational Locations (GPS Tracking Can Be Useful)"></FluentTextField>
+                <FluentTextField @bind-Value=value39 Label="Utilization Rates (e.g. Idle Vs Active Time)"></FluentTextField>
+                <FluentTextField @bind-Value=value40 Label="Operator Details"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![10].Description" Id="tab-v11">
+                <div class="panel-header">@groups![10].Description</div>
+                <FluentTextField @bind-Value=value41 Label="Fuel Consumption Costs"></FluentTextField>
+                <FluentTextField @bind-Value=value42 Label="Regular Maintenance & Repair Costs"></FluentTextField>
+                <FluentTextField @bind-Value=value43 Label="Operator Costs"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![11].Description" Id="tab-v12">
+                <div class="panel-header">@groups![11].Description</div>
+                <FluentTextField @bind-Value=value44 Label="Downtime Incidents & Duration2"></FluentTextField>
+                <FluentTextField @bind-Value=value45 Label="Efficiency Metrics (e.g. Tons Moved Per Hour)"></FluentTextField>
+                <FluentTextField @bind-Value=value46 Label="Cost-Benefit Analyzes For Various Operations"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![12].Description" Id="tab-v13">
+                <div class="panel-header">@groups![12].Description</div>
+                <FluentTextField @bind-Value=value47 Label="Emissions Data"></FluentTextField>
+                <FluentTextField @bind-Value=value48 Label="Noise Levels"></FluentTextField>
+                <FluentTextField @bind-Value=value49 Label="Impact on Local Ecosystems"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="@groups![13].Description" Id="tab-v14">
+                <div class="panel-header">@groups![13].Description</div>
+                <FluentTextField @bind-Value=value50 Label="Expected End-of-Life Date"></FluentTextField>
+                <FluentTextField @bind-Value=value51 Label="Decommissioning Plans"></FluentTextField>
+                <FluentTextField @bind-Value=value52 Label="Resale or Scrap Value"></FluentTextField>
+            </FluentTab>
+            <FluentTab Label="Additional Information" Id="tab-v15">
+                <FluentTextField @bind-Value=value50 Label="Additional Information"></FluentTextField>
+            </FluentTab>
+        </FluentTabs>
+    </FluentDialogBody>
+
+}
 
 @code {
-    
+    string? value1, value2;
+    string? value3, value4, value5, value6, value7, value8, value9, value10;
+    string? value11, value12, value13, value14, value15, value16, value17, value18, value19, value20;
+    string? value21, value22, value23, value24, value25, value26, value27, value28, value29, value30;
+    string? value31, value32, value33, value34, value35, value36, value37, value38, value39, value40;
+    string? value41, value42, value43, value44, value45, value46, value47, value48, value49, value50, value51, value52;
+
+    public string? fluent_tab_label = ""; //ActiveTabIdChanged
+    FluentTabs? fluentTabs;
+    FluentTab? fluentTab = new();
+
+    async Task ActiveTabIdChanged(string _tab_Id)
+    {
+        // Console.WriteLine($"ActiveTabIdChanged: {_tab_Id}");
+        await Task.CompletedTask;
+    }
+
+    async Task OnTabChange(FluentTab _tab)
+    {
+        // fluentTab.LabelClass = "";
+        // _tab.LabelClass = "fluent-tab-label";
+        // fluentTab = _tab;
+        // // StateHasChanged();
+
+        Console.WriteLine($"OnTabChange: {_tab.Id}");
+        // tab.LabelClass
+        await Task.CompletedTask;
+    }
+
+    async Task OnTabSelect(FluentTab _tab)
+    {
+        Console.WriteLine($"OnTabSelect: {_tab.Id}");
+        await Task.CompletedTask;
+    }
+
+    async Task OnTabClose(FluentTab _tab)
+    {
+        Console.WriteLine($"OnTabClose: {_tab.Id}");
+        // tab.LabelClass
+        await Task.CompletedTask;
+    }
+}
+
+@code {
+    [Parameter]
+    public xpAsset? Content { get; set; }
+
+    public List<xpAsset_Category>? categories = new();
+    public xpAsset_Category? category;
+    public string? _category;
+
+    public List<xpAsset_Classification>? classifications = new();
+    public xpAsset_Classification? classification;
+    public string? _classification;
+
+    public List<xpAsset_Brand>? brands = new();
+    public xpAsset_Brand? brand;
+    public string? _brand;
+
+    public List<xpAsset_Group>? groups = new();
+    public xpAsset_Group? group;
+    public string? _group;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string? _company_Id = "002";        //for Testing purpose
+        string? _category = "Equipment";    //for Testing purpose
+
+        categories = await IService.AssetCategoryAsync(_company_Id!);
+        groups = await IService.AssetGroupAsync(_company_Id!);
+
+        if (Content is null)
+        {
+            Content = new xpAsset();
+            Content.Company_Id = _company_Id;
+            Content.Category = _category;
+        }
+
+        _category = Content.Category;
+
+        classifications = await IService.AssetClassificationAsync(_company_Id!, _category!);
+        brands = await IService.AssetBrandAsync(_company_Id!, _category!);
+
+        await Task.CompletedTask;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            //fluentTab = fluentTabs!.ActiveTab;
+            // fluentTab.Class = "";
+        }
+        else
+        {
+
+        }
+        await Task.CompletedTask;
+    }
 }
