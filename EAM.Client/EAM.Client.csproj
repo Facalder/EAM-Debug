@@ -34,6 +34,9 @@
 
   <ItemGroup>
     <Folder Include="Shared\Components\Modal\" />
-    <Folder Include="Shared\Dashboard\Menu\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Layout\MainLayout.razor" />
   </ItemGroup>
 </Project>
