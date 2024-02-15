@@ -1,0 +1,51 @@
+table {
+  border-collapse: collapse;
+  display: inline-table;
+  font-family: Calibri;
+  font-size: medium;
+}
+
+  table th, table td {
+    border: 1px solid;
+    border-color: grey;
+    padding: 4px 4px 4px 4px;
+    vertical-align: middle;
+  }
+
+tr:hover {
+  background-color: cyan;
+}
+
+td:hover {
+  background-color: yellow;
+}
+
+</style >
+
+<style >
+.sticky-header {
+  position: sticky;
+  top: -1px;
+  z-index: 900;
+  background: lightyellow;
+  color: black;
+  font-size: large;
+}
+
+th:after,
+th:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+th:before {
+  top: 0;
+  border-top: 3px solid black;
+}
+
+th:after {
+  bottom: 0;
+  border-bottom: 3px solid black;
+}
