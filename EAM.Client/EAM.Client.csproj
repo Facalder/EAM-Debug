@@ -33,10 +33,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Pages\Finance\" />
+    <Folder Include="Pages\Fleet\" />
+    <Folder Include="Pages\HRIS\" />
+    <Folder Include="Pages\SCM\" />
     <Folder Include="Shared\Components\Modal\" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Layout\MainLayout.razor" />
+    <_ContentIncludedByDefault Remove="Shared\Components\Dashboard\AppBar.razor" />
+    <_ContentIncludedByDefault Remove="Shared\Components\Dashboard\Footer.razor" />
+    <_ContentIncludedByDefault Remove="Shared\Components\Dashboard\NavMenu.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Shared\Dashboard\Footer.razor" />
+    <AdditionalFiles Include="Shared\Dashboard\NavMenu.razor" />
   </ItemGroup>
 </Project>

@@ -21,6 +21,6 @@
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="wwwroot\css\Asset\AssetList.css" />
+    <None Include="wwwroot\css\asset\asset-list.css" />
   </ItemGroup>
 </Project>

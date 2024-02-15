@@ -1,39 +1,63 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-@using EAM.Client.Shared.Components.Dashboard
+@using EAM.Client.Shared.Components.Menu.Notifications
+@using EAM.Client.Shared.Dashboard
+@using System.Runtime.InteropServices
 
 <PageTitle>DJATI - Mining Management System</PageTitle>
 
 <FluentDesignTheme OfficeColor="OfficeColor.Excel" Mode="DesignThemeModes.Light"  Direction="LocalizationDirection.LeftToRight" />
-<FluentToastProvider MaxToastCount="10" ShowCloseButton="true" Position="ToastPosition.BottomRight" Timeout="800" RemoveToastsOnNavigation="true"/>
-<FluentMessageBarProvider MaxMessageCount="10" NewestOnTop="true" ClearAfterNavigation="true"/>
 <FluentDialogProvider/>
 <FluentTooltipProvider/>
 
-<FluentLayout>
-    <FluentHeader>
-        BlazorApp2
+<div>
+  <FluentLayout>
+    <FluentHeader Class="siteheader">
+      <a href="/">
+        DJATI
+      </a>
+      <FluentSpacer />
+      <div class="notifications">
+        <NotificationCenter />
+      </div>
     </FluentHeader>
-    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
-        <NavMenu />
-        <FluentBodyContent Class="body-content">
-            <div class="content">
-                @Body
-            </div>
-        </FluentBodyContent>
-    </FluentStack>
-    <FluentFooter>
-        <div class="link1">
-            <a href="https://www.fluentui-blazor.net" target="_blank">Documentation and demos</a>
-        </div>
-        <div class="link2">
-            <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">About Blazor</a>
-        </div>
-    </FluentFooter>
-</FluentLayout>
+    <FluentStack Class="body-stack" Orientation="Orientation.Horizontal" Width="100%" HorizontalGap="0">
+      <NavMenu />
+      <FluentBodyContent id="body-content" Style="height: calc(100dvh - 90px);">
+        <div class="px-4 py-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-3xl space-y-5">
+          <div class="space-y-8">
+            <FluentMessageBarProvider NewestOnTop="true" ClearAfterNavigation="true" MaxMessageCount="10"  />
 
-<div id="blazor-error-ui">
-  An unhandled error has occurred.
-  <a href="" class="reload">Reload</a>
-  <a class="dismiss">🗙</a>
+            <ErrorBoundary>
+              <ChildContent>
+                @Body
+              </ChildContent>
+              <ErrorContent>
+                <p class="alert alert-danger">
+                  Error!
+                </p>
+              </ErrorContent>
+            </ErrorBoundary>
+          </div>
+          <FluentToastProvider MaxToastCount="10" />
+          <FluentDialogProvider />
+          <FluentTooltipProvider />
+        </div>
+      </FluentBodyContent>
+    </FluentStack>
+
+    <FluentFooter Style="@("height: 40px; color: white;")">
+      <div class="version">
+        <small>
+          &nbsp;-&nbsp;
+          <a href="https://dotnet.microsoft.com/en-us/learn/aspnet/what-is-aspnet-core">Powered by @RuntimeInformation.FrameworkDescription</a>
+        </small>
+      </div>
+      <FluentSpacer />
+
+      <div class="copy">
+        <small>DJATI - MMS © 2023. All rights reserved.</small>
+      </div>
+    </FluentFooter>
+  </FluentLayout>
 </div>

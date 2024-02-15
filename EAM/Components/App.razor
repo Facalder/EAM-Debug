@@ -1,28 +1,34 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <title>DJATI - Mining Management System</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <base href="/"/>
+  <title>DJATI - Mining Management System</title>
 
-    <link rel="stylesheet" href="css/app.css" />
-    <link rel="stylesheet" href="EAM.styles.css" />
+  <link rel="stylesheet" href="css/app.css"/>
+  <link rel="stylesheet" href="/css/asset/asset-list.css" />
+  <link rel="stylesheet" href="EAM.styles.css"/>
 
-    <!--- Google Fonts - DM Sans --->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <!--- Google Fonts - DM Sans --->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
 
-    <HeadOutlet @rendermode="@(new InteractiveAutoRenderMode(prerender: false))" />
+  <HeadOutlet @rendermode="@(new InteractiveAutoRenderMode(false))"/>
 </head>
 
 <body>
-    <Routes @rendermode="@(new InteractiveAutoRenderMode(prerender: false))" />
-    <script src="_framework/blazor.web.js"></script>
+  <div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+  </div>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+  <Routes @rendermode="@(new InteractiveAutoRenderMode(false))"/>
+  <script src="_framework/blazor.web.js"></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
 </body>
-
 </html>

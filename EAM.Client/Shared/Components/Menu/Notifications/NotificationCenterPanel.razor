@@ -1,0 +1,17 @@
+﻿@implements IDialogContentComponent<GlobalState>
+@inject IMessageService MessageService
+
+<div class="space-y-5">
+  <FluentStack>
+    <FluentSpacer />
+    <FluentAnchor Appearance="@Appearance.Hypertext" Href="" OnClick="@(e => MessageService.Clear() )">
+      Dismiss all
+    </FluentAnchor>
+  </FluentStack>
+  <FluentMessageBarProvider Section="Hello World" MaxMessageCount="-1" Type="@MessageType.Notification" />
+</div>
+
+@code {
+  [Parameter]
+  public GlobalState Content { get; set; } = default!;
+}

@@ -1,0 +1,81 @@
+﻿<div class="navmenu">
+  <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
+  <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())"  Color="Color.Lightweight" /></label>
+  <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click()">
+    <FluentNavMenu Id="main-menu" Title="Main menu">
+      <FluentNavLink Icon="@(new Icons.Regular.Size20.Home())" Href="/" Match="NavLinkMatch.All">
+        <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+          Home
+        </FluentLabel>
+      </FluentNavLink>
+
+      <FluentNavGroup Expanded="true" Gap="10px" Icon="@(new Icons.Regular.Size20.WebAsset())">
+        <TitleTemplate>
+          <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+            Assets
+          </FluentLabel>
+        </TitleTemplate>
+        <ChildContent>
+          <FluentNavLink Href="/Asset/Asset-Details" Icon="@(new Icons.Regular.Size20.AppsListDetail())">Asset Details</FluentNavLink>
+          <FluentNavLink Href="/Asset/Asset-List" Icon="@(new Icons.Regular.Size20.List())">Asset List</FluentNavLink>
+          <FluentNavLink Href="/Asset/Asset-List-Generic" Icon="@(new Icons.Regular.Size20.DocumentBulletList())">Asset List Generic</FluentNavLink>
+        </ChildContent>
+      </FluentNavGroup>
+
+      <FluentNavGroup Expanded="true" Gap="10px" Icon="@(new Icons.Regular.Size20.VehicleTruck())">
+        <TitleTemplate>
+          <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+            Fleet Management
+          </FluentLabel>
+        </TitleTemplate>
+        <ChildContent>
+          <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.Clipboard())">Trucks</FluentNavLink>
+        </ChildContent>
+      </FluentNavGroup>
+
+      <FluentNavGroup Expanded="true" Gap="10px" Icon="@(new Icons.Regular.Size20.Toolbox())">
+        <TitleTemplate>
+          <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+            Maintenance Management
+          </FluentLabel>
+        </TitleTemplate>
+        <ChildContent>
+          <FluentNavLink Href="/Work-Order/Work-Order-1" Icon="@(new Icons.Regular.Size20.Clipboard())">Work Order</FluentNavLink>
+        </ChildContent>
+      </FluentNavGroup>
+
+      <FluentNavGroup Expanded="true" Gap="10px" Icon="@(new Icons.Regular.Size20.Box())">
+        <TitleTemplate>
+          <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+            Suply Chain Management
+          </FluentLabel>
+        </TitleTemplate>
+        <ChildContent>
+          <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.Clipboard())">Report</FluentNavLink>
+        </ChildContent>
+      </FluentNavGroup>
+
+      <FluentNavGroup Expanded="true" Gap="10px" Icon="@(new Icons.Regular.Size20.Money())">
+        <TitleTemplate>
+          <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+            Finance Management
+          </FluentLabel>
+        </TitleTemplate>
+        <ChildContent>
+          <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.Clipboard())">Report</FluentNavLink>
+        </ChildContent>
+      </FluentNavGroup>
+
+      <FluentNavGroup Expanded="true" Gap="10px" Icon="@(new Icons.Regular.Size20.People())">
+        <TitleTemplate>
+          <FluentLabel Typo="Typography.H3" Weight="FontWeight.Bold">
+            HRIS Management
+          </FluentLabel>
+        </TitleTemplate>
+        <ChildContent>
+          <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.List())">Worker List</FluentNavLink>
+        </ChildContent>
+      </FluentNavGroup>
+    </FluentNavMenu>
+  </nav>
+</div>
